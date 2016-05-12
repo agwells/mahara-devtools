@@ -46,44 +46,45 @@ dbtype=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->
 dbname=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbname;"`
 dbprefix=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbprefix;"`
 
-reset=all
-while getopts nr: opt; do
-    case $opt in
-        n)
-            reset=none
-            ;;
-        r)
-            reset=one
-            type=$(echo $OPTARG | cut -d. -f1)
-            if [[ $type == 'core' ]]; then
-                table=cron
-                plugin=
-                callfunction=$(echo $OPTARG | cut -d. -f2)
-            else
-                table=${type}_cron
-                plugin=$(echo $OPTARG | cut -d. -f2)
-                callfunction=$(echo $OPTARG | cut -d. -f3)
-            fi
-            
-            if [[ -z "$callfunction" ]]; then
-                echo "ERROR: invalid cron task name '{$opt}'"
-                exit 1
-            fi
-
-            if [[ -z "$plugin" ]]; then
-                echo "Resetting task ${table}.${callfunction}"
-                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}cron SET nextrun=null WHERE callfunction='${callfunction}';"
-            else
-                echo "Resetting task ${table}.${plugin}.${callfunction}"
-                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}${table} SET nextrun=null WHERE plugin='${plugin}' AND callfunction='${callfunction}';"
-            fi
-            ;;
-    esac
-done
-
-exit
-
 if [[ $dbtype == "postgres"* ]]; then
+
+    reset=all
+    while getopts nr: opt; do
+        case $opt in
+            n)
+                reset=none
+                ;;
+            r)
+                reset=one
+                type=$(echo $OPTARG | cut -d. -f1)
+                if [[ $type == 'core' ]]; then
+                    table=cron
+                    plugin=
+                    callfunction=$(echo $OPTARG | cut -d. -f2)
+                else
+                    table=${type}_cron
+                    plugin=$(echo $OPTARG | cut -d. -f2)
+                    callfunction=$(echo $OPTARG | cut -d. -f3)
+                fi
+                
+                if [[ -z "$callfunction" ]]; then
+                    echo "ERROR: invalid cron task name '{$opt}'"
+                    exit 1
+                fi
+
+                if [[ -z "$plugin" ]]; then
+                    echo "Resetting task ${table}.${callfunction}"
+                    sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}cron SET nextrun=null WHERE callfunction='${callfunction}';"
+                else
+                    echo "Resetting task ${table}.${plugin}.${callfunction}"
+                    sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}${table} SET nextrun=null WHERE plugin='${plugin}' AND callfunction='${callfunction}';"
+                fi
+                ;;
+        esac
+    done
+
+    exit
+
     case $reset in
         none)
             echo "Not resetting any tasks..."
