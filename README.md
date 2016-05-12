@@ -75,4 +75,8 @@ configuration file to determine where the Mahara code is located.
 I also recommend aliasing it into your /usr/local/bin directory:
 
  sudo ln -s /usr/local/bin/maharaupgrade /PATH/TO/mahara-devtools/maharaupgrade.sh
- 
+
+# Copyright
+
+Copyright 2016 Aaron Wells
+Distributed under the GNU Public License version 3
