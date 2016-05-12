@@ -83,8 +83,6 @@ if [[ $dbtype == "postgres"* ]]; then
         esac
     done
 
-    exit
-
     case $reset in
         none)
             echo "Not resetting any tasks..."
