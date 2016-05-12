@@ -38,6 +38,14 @@ else
     sitename=$defaultsite
 fi
 
+docroot=$webdir/$sitename/htdocs
+echo "Running cron for Mahara site at $docroot"
+echo $reset
+
+dbtype=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbtype;"`
+dbname=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbname;"`
+dbprefix=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbprefix;"`
+
 reset=all
 while getopts nr: opt; do
     case $opt in
@@ -61,31 +69,24 @@ while getopts nr: opt; do
                 echo "ERROR: invalid cron task name '{$opt}'"
                 exit 1
             fi
+
+            if [[ -z "$plugin" ]]; then
+                echo "Resetting task ${table}.${callfunction}"
+                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}cron SET nextrun=null WHERE callfunction='${callfunction}';"
+            else
+                echo "Resetting task ${table}.${plugin}.${callfunction}"
+                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}${table} SET nextrun=null WHERE plugin='${plugin}' AND callfunction='${callfunction}';"
+            fi
             ;;
     esac
 done
 
-docroot=$webdir/$sitename/htdocs
-echo "Running cron for Mahara site at $docroot"
-echo $reset
-
-dbtype=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbtype;"`
-dbname=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbname;"`
-dbprefix=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbprefix;"`
+exit
 
 if [[ $dbtype == "postgres"* ]]; then
     case $reset in
         none)
             echo "Not resetting any tasks..."
-            ;;
-        one)
-            if [[ -z "$plugin" ]]; then
-                echo "Resetting task ${table}.${callfunction}"
-                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}cron SET nextrun=null WHERE callfunction='${callfunction}';"
-            else
-                echo "Resetting task ${table}.${plugin}.{$callfunction}"
-                sudo -u postgres psql -e -d $dbname -c "UPDATE ${dbprefix}${table} SET nextrun=null WHERE plugin='${plugin}' AND callfunction='${callfunction}';"
-            fi
             ;;
         all)
             echo "Resetting all cron tasks..."
