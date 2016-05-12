@@ -1,10 +1,21 @@
+# Mahara dev tools
+
+These are a couple of little scripts that I've written to help me
+quickly re-install or update my local Mahara dev site.
+
 # maharawipe.sh
 
-This is a quick little script to automate the process of "wiping"
-a local Mahara site; that is, emptying it of all data and doing
-a clean install.
+This script will "wipe" a local Mahara site. It re-creates the database,
+deletes the contents of the dataroot directory, and runs the command-line
+installer script. It takes around 15 seconds, in Postgres.
 
-# Requirements
+## Usage
+
+ maharawipe.sh [site name]
+ 
+If the "site name" is left off, it'll run on your default site.
+
+## Requirements
 
 This script assumes that you already have a Mahara site configured
 and installed. If not, follow the steps here:
@@ -21,13 +32,13 @@ with passwordless access. (And if you are using that insecure
 setup, make sure it's firewalled and not accessible to the
 outside world.)
 
-# Installation & Configuration
+## Installation & Configuration
 
 If your Mahara developer environment is based on the instructions
 on the wiki page linked to above, this script will probably
 just work automatically with its defaults.
 
-If not, you can configure it by creating a file at ~/.maharawipe.cfg
+If not, you can configure it by creating a file at ~/.mahara-devtools.cfg
 and placing some configuration values into it like this:
 
  webdir=/var/www                 # Parent directory of your Mahara checkout
@@ -41,10 +52,27 @@ I'd set webdir to "/var/www" and defaultsite to "maharadev1".
 
 For ease of use, I recommend aliasing it into your /usr/local/bin directory:
 
- sudo ln -s /usr/local/bin/maharawipe /PATH/TO/maharawipe/maharawipe.sh
+ sudo ln -s /usr/local/bin/maharawipe /PATH/TO/mahara-devtools/maharawipe.sh
 
-# Usage
+# maharaupgrade.sh
 
- maharawipe.sh [site name]
+This script will run the command-line upgrade script for a local
+Mahara site. I wrote it because I just got tired of having to
+type in the full "sudo -u www-data" needed to ensure the correct
+permissions in the dataroot directory.
+
+## Usage
+
+ maharaupgrade.sh [site name]
  
 If the "site name" is left off, it'll run on your default site.
+
+## Installation & Configuration
+
+Same as the maharawipe.sh script. It even usesv the same "~/.mahara-devtools.cfg"
+configuration file to determine where the Mahara code is located.
+
+I also recommend aliasing it into your /usr/local/bin directory:
+
+ sudo ln -s /usr/local/bin/maharaupgrade /PATH/TO/mahara-devtools/maharaupgrade.sh
+ 

@@ -5,7 +5,7 @@
 # Distributed under the GPL3 license
 
 ## START CONFIGURATION
-# You can place a shell script at ~/.maharawipe.cfg to define
+# You can place a shell script at ~/.mahara-devtools.cfg to define
 # the values of webdir, adminemail, and adminpw
 
 # Default config examples based on https://wiki.mahara.org/wiki/Developer_Area/Developer_Environment
@@ -22,8 +22,8 @@ adminpw=`pwgen -N 1` # Generate a random password
 #defaultsite: The default site to use if none is specified
 defaultsite=mahara
 
-if [ -f ~/.maharawipe.cfg ]; then
-    . ~/.maharawipe.cfg
+if [ -f ~/.mahara-devtools.cfg ]; then
+    . ~/.mahara-devtools.cfg
 fi;
 
 ## END CONFIGURATION
