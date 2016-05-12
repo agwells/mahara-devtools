@@ -76,6 +76,30 @@ I also recommend aliasing it into your /usr/local/bin directory:
 
  sudo ln -s /PATH/TO/mahara-devtools/maharaupgrade.sh /usr/local/bin/maharaupgrade
 
+# maharacron.sh
+
+This script will run the Mahara cron script, optionally also resetting
+the "nextrun" time for one or all cron tasks so that they'll run immediately.
+
+## Usage
+
+ maharacron.sh [site name] [-(n|r (core.<callfunction>|<plugintype>.<pluginname>.<callfunction>))]
+ 
+By default it resets the nextrun time for every cron task.
+
+The "-n" option tells it *not* to reset the nextrun time of any cron task.
+
+The "-r" option tells it to only reset the nextrun time of one specific cron task.
+The name of the crontask should be "core.<callfunction>" for "core" tasks (i.e. in the
+"cron" table), or "<plugintype>.<pluginname>.<callfunction>" for a task belonging
+to a plugin.
+
+The "-r" option can be provided multiple times to specify multiple tasks to reset.
+
+Example:
+
+ maharacron.sh -r core.activity_process_queue -r auth.ldap.auth_ldap_sync_cron
+
 # Copyright
 
 Copyright 2016 Aaron Wells
