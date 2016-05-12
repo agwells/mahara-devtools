@@ -52,7 +52,7 @@ I'd set webdir to "/var/www" and defaultsite to "maharadev1".
 
 For ease of use, I recommend aliasing it into your /usr/local/bin directory:
 
- sudo ln -s /usr/local/bin/maharawipe /PATH/TO/mahara-devtools/maharawipe.sh
+ sudo ln -s /PATH/TO/mahara-devtools/maharawipe.sh /usr/local/bin/maharawipe
 
 # maharaupgrade.sh
 
@@ -74,7 +74,7 @@ configuration file to determine where the Mahara code is located.
 
 I also recommend aliasing it into your /usr/local/bin directory:
 
- sudo ln -s /usr/local/bin/maharaupgrade /PATH/TO/mahara-devtools/maharaupgrade.sh
+ sudo ln -s /PATH/TO/mahara-devtools/maharaupgrade.sh /usr/local/bin/maharaupgrade
 
 # Copyright
 
