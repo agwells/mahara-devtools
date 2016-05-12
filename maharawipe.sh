@@ -39,13 +39,13 @@ fi
 
 docroot=$webdir/$sitename/htdocs
 
-echo "Wiping Mahara site at $docroot with DB $sitename"
 dbtype=`php -r "error_reporting(0); include '$docroot/config.php'; echo \\$cfg->dbtype;"`
 dataroot=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dataroot;"`
 wwwroot=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->wwwroot;"`
 dbport=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbport;"`
 dbuser=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbuser;"`
 dbname=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbname;"`
+echo "Wiping Mahara site at $docroot with DB $dbname"
 
 if [[ $dataroot == "" ]]
 then
