@@ -17,7 +17,7 @@ webdir=~/code
 adminemail=`git config --get user.email`
 
 #adminpw: The password for the default admin user.
-adminpw=`pwgen -N 1` # Generate a random password
+adminpw=
 
 #defaultsite: The default site to use if none is specified
 defaultsite=mahara
@@ -26,8 +26,20 @@ if [ -f ~/.mahara-devtools.cfg ]; then
     . ~/.mahara-devtools.cfg
 fi;
 
-## END CONFIGURATION
+if [[ -z "$adminpw" ]]; then
+    adminpw=`pwgen -N 1` # Generate a random password
+    if [[ -z "$adminpw" ]]; then
+        echo "No admin user password specified. Please set one in ~/.mahara-devtools.cfg, or install pwgen."
+        exit 1
+    fi
+fi;
 
+if [[ -z "$adminemail" ]]; then
+    echo "No admin user email address specified. Please set one in ~/.mahara-devtools.cfg, or set your email in your global git config \"user.email\" setting."
+    exit 1
+fi;
+
+## END CONFIGURATION
 
 # If no site name is provided, assume it's called "mahara" by default.
 if [[ $1 ]]
@@ -47,10 +59,10 @@ dbuser=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg-
 dbname=`php -r "error_reporting(0); include '/$docroot/config.php'; echo \\$cfg->dbname;"`
 echo "Wiping Mahara site at $docroot with DB $dbname"
 
-if [[ $dataroot == "" ]]
+if [[ -z "$dataroot" ]]
 then
-    echo "No dataroot at '$dataroot'. Is there a config.php file?"
-    exit
+    echo "No dataroot at '$dataroot'. Is there a config.php file at '$docroot/htdocs/config.php'?"
+    exit 1
 fi
 
 echo Clearing dataroot directory $dataroot
